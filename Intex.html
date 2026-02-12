@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zorvethra Master Pro</title>
+
+<style>
+body{
+background:#0f172a;
+color:white;
+font-family:sans-serif;
+padding:20px;
+}
+
+input, textarea, select{
+width:100%;
+padding:10px;
+margin-top:8px;
+background:#1e293b;
+color:white;
+border:none;
+border-radius:8px;
+}
+
+button{
+margin-top:10px;
+padding:12px;
+width:100%;
+border:none;
+background:#14b8a6;
+color:white;
+font-size:16px;
+border-radius:8px;
+}
+
+.card{
+background:#020617;
+padding:15px;
+margin-top:15px;
+border-radius:10px;
+}
+</style>
+</head>
+
+<body>
+
+<h2>Zorvethra Master PRO</h2>
+
+<!-- LOGIN -->
+<div class="card">
+<h3>User Login</h3>
+<input id="username" placeholder="Username">
+<input id="password" placeholder="Password">
+<button onclick="login()">Login</button>
+</div>
+
+<!-- ADMIN PANEL -->
+<div class="card">
+<h3>Admin Settings</h3>
+
+<input id="bankName" placeholder="Bank Name">
+<input id="upiId" placeholder="UPI / Payment ID">
+
+<select id="plan">
+<option value="1">1 Hour</option>
+<option value="24">1 Day</option>
+<option value="720">1 Month</option>
+<option value="2160">3 Month</option>
+<option value="8760">1 Year</option>
+</select>
+
+<button onclick="savePayment()">Save Payment Details</button>
+</div>
+
+<!-- PAYMENT SCREENSHOT -->
+<div class="card">
+<h3>Upload Payment Screenshot</h3>
+<input type="file">
+</div>
+
+<!-- DATA INPUT -->
+<div class="card">
+<h3>Upload Market Screenshot</h3>
+<input type="file">
+
+<textarea id="dataInput" placeholder="Paste Market Data"></textarea>
+
+<button onclick="analyze()">Analyze</button>
+</div>
+
+<!-- RESULT -->
+<div class="card" id="result"></div>
+
+<button onclick="copyResult()">Copy Result</button>
+<button onclick="downloadResult()">Download</button>
+<button onclick="shareResult()">Share</button>
+
+<script>
+
+// ===== LOGIN SYSTEM =====
+
+function login(){
+let u=document.getElementById("username").value;
+let p=document.getElementById("password").value;
+
+if(u==="admin" && p==="1234"){
+alert("Admin Login Success");
+}else{
+alert("User Login Success");
+}
+}
+
+// ===== PAYMENT SAVE =====
+
+function savePayment(){
+
+let bank=document.getElementById("bankName").value;
+let upi=document.getElementById("upiId").value;
+
+localStorage.setItem("bank",bank);
+localStorage.setItem("upi",upi);
+
+alert("Payment Saved");
+}
+
+// ===== ANALYSIS =====
+
+function analyze(){
+
+let singles=["2","0","5"];
+let pattis=["240","402","022","220","202"];
+
+document.getElementById("result").innerHTML=
+"<h3>Result</h3>"+
+"<b>Single:</b> "+singles.join(", ")+"<br><br>"+
+"<b>Patti:</b>
