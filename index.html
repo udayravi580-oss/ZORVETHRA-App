@@ -134,3 +134,143 @@ document.getElementById("result").innerHTML=
 "<h3>Result</h3>"+
 "<b>Single:</b> "+singles.join(", ")+"<br><br>"+
 "<b>Patti:</b>
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ZORVETHRA Free App</title>
+<style>
+body{
+    font-family:Arial;
+    background:#111;
+    color:white;
+    padding:20px;
+}
+.container{
+    max-width:400px;
+    margin:auto;
+    background:#1a1a1a;
+    padding:20px;
+    border-radius:10px;
+}
+input{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    border-radius:6px;
+    border:none;
+}
+button{
+    width:100%;
+    padding:15px;
+    margin-top:15px;
+    border:none;
+    border-radius:8px;
+    font-size:18px;
+    cursor:pointer;
+}
+.green{ background:#28a745; color:white; }
+.blue{ background:#007bff; color:white; }
+.red{ background:#dc3545; color:white; }
+
+#appContent{ display:none; margin-top:20px; text-align:center; }
+</style>
+</head>
+<body>
+
+<div class="container">
+<h2>ZORVETHRA Free App</h2>
+
+<input type="text" id="mobile" placeholder="Enter Mobile Number">
+<input type="text" id="password" placeholder="Enter Payment Code / OTP">
+
+<button class="green" onclick="unlockApp()">Unlock / Login</button>
+<button class="blue" onclick="masterAccess()">Master Access</button>
+
+<div id="appContent">
+<h3>✅ App Unlocked</h3>
+<p>Welcome to ZORVETHRA</p>
+<button class="red" onclick="lockApp()">Lock Again</button>
+</div>
+</div>
+
+<script>
+// ====================== CONFIG ======================
+const MASTER_CODE = "ZORVETHRA999"; // तुम्हारा private master code
+const AUTO_UNLOCK_MINUTES = 60; // default 1 hour unlock
+// =====================================================
+
+// Random OTP / Payment Code Generate
+function generateCode(){
+    return Math.floor(100000 + Math.random()*900000); // 6 digit random
+}
+
+// Unlock App Function
+function unlockApp(){
+    let pass = document.getElementById("password").value;
+    let mobile = document.getElementById("mobile").value;
+
+    if(!mobile){ alert("Enter Mobile Number"); return; }
+
+    // Master code check
+    if(pass === MASTER_CODE){
+        document.getElementById("appContent").style.display="block";
+        alert("Master Access Granted");
+        return;
+    }
+
+    // Auto random code for user
+    let storedCode = localStorage.getItem("userCode_" + mobile);
+
+    if(!storedCode){
+        let code = generateCode();
+        localStorage.setItem("userCode_" + mobile, code);
+        storedCode = code;
+        alert("Your Unlock Code: " + code);
+    }
+
+    if(pass === storedCode){
+        let unlockTime = Date.now() + AUTO_UNLOCK_MINUTES*60*1000;
+        localStorage.setItem("unlockTime_" + mobile, unlockTime);
+        document.getElementById("appContent").style.display="block";
+        alert("App unlocked for " + AUTO_UNLOCK_MINUTES + " minutes");
+    }else{
+        alert("Invalid Code. Your code is: " + storedCode);
+    }
+}
+
+// Master Access Button
+function masterAccess(){
+    let pass = document.getElementById("password").value;
+    if(pass === MASTER_CODE){
+        document.getElementById("appContent").style.display="block";
+        alert("Master Access Granted");
+    }else{
+        alert("Wrong Master Code");
+    }
+}
+
+// Auto Unlock Check
+window.onload = function(){
+    let mobile = document.getElementById("mobile").value;
+    if(!mobile) return;
+
+    let unlockTime = localStorage.getItem("unlockTime_" + mobile);
+    if(unlockTime && Date.now() < unlockTime){
+        document.getElementById("appContent").style.display="block";
+    }
+};
+
+// Lock App
+function lockApp(){
+    let mobile = document.getElementById("mobile").value;
+    if(mobile){
+        localStorage.removeItem("unlockTime_" + mobile);
+    }
+    document.getElementById("appContent").style.display="none";
+    alert("App Locked");
+}
+</script>
+
+</body>
+</html>
