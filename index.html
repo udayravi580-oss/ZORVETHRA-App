@@ -128,4 +128,122 @@ window.onload = function(){
 </script>
 
 </body>
+</html><!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>ZORVETHRA Ultimate</title>
+<style>
+  body { font-family: Arial, sans-serif; background:#f0f4f8; }
+  #ZORVETHRABox {
+      max-width:400px; margin:50px auto; padding:20px;
+      border:2px solid #28a745; border-radius:10px; background:#f8fff8;
+      text-align:center;
+  }
+  h2 { color:#28a745; }
+  #refreshMsg { background:#fff3cd;color:#856404;padding:10px;margin:10px 0;border-radius:6px; }
+  #legalMsg { background:#f0f0f0;color:#555;padding:10px;margin:10px 0;border-radius:6px;font-size:14px; }
+  button {
+      padding:10px 18px;margin:5px;border:none;border-radius:6px;font-size:14px;cursor:pointer;
+      color:white;
+  }
+  #otpBtn { background:#28a745; }
+  #gmailBtn { background:#4285F4; }
+  #masterBtn { background:#007bff; padding:12px 20px;font-size:16px; }
+  #unlockMsg { display:none; padding:10px;margin-top:10px;border-radius:6px;text-align:center;font-weight:bold; }
+</style>
+</head>
+<body>
+
+<div id="ZORVETHRABox">
+
+  <h2>ZORVETHRA Ultimate</h2>
+
+  <div id="refreshMsg">
+    ⚠️ ध्यान दें / Attention: Page refresh required for latest updates. Please refresh to see new features and unlock content.
+  </div>
+
+  <div id="legalMsg">
+    ⚖️ Legal Notice: Ye app personal use ke liye free hai. Misuse strictly prohibited.
+  </div>
+
+  <div style="margin:15px 0;">
+    <button id="otpBtn" onclick="loginWithOTP()">Login with OTP</button>
+    <button id="gmailBtn" onclick="loginWithGmail()">Login with Gmail</button>
+  </div>
+
+  <button id="masterBtn" onclick="masterAccess()">Master Access</button>
+
+  <div id="unlockMsg"></div>
+
+</div>
+
+<script>
+const UNLOCK_MINUTES = 60; // 1 hour unlock
+const MASTER_CODE = "MASTER2026"; // Change anytime
+
+// Check unlock status on page load
+window.onload = function() {
+  let oldBox = document.getElementById("ZORVETHRABox");
+  if(oldBox) oldBox.remove(); // Remove old box (if exists)
+
+  // Insert fresh box (re-paste HTML above this script if needed)
+
+  // Check localStorage for unlock
+  let unlocked = localStorage.getItem('ZORVETHRA_unlocked');
+  let expiry = localStorage.getItem('ZORVETHRA_expiry');
+
+  if(unlocked === 'true' && expiry && new Date().getTime() < Number(expiry)) {
+      showMessage("✅ You are already unlocked!", "#28a745");
+  }
+}
+
+// Show inline messages
+function showMessage(msgText, color="#28a745") {
+  let msg = document.getElementById("unlockMsg");
+  msg.style.display = "block";
+  msg.style.background = color;
+  msg.innerHTML = msgText;
+  setTimeout(function(){ msg.style.display = "none"; }, 5000);
+}
+
+// OTP Login
+function loginWithOTP() {
+  let userOTP = prompt("Enter OTP sent to your mobile/email:");
+  const VALID_OTP = "123456"; // Change this OTP anytime
+  if(userOTP === VALID_OTP) {
+    localStorage.setItem('ZORVETHRA_unlocked', 'true');
+    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
+    showMessage("✅ OTP verified! App unlocked for " + UNLOCK_MINUTES + " minutes");
+  } else {
+    showMessage("❌ Invalid OTP. Try again.", "#dc3545");
+  }
+}
+
+// Gmail Login
+function loginWithGmail() {
+  let gmail = prompt("Enter your Gmail ID:");
+  if(gmail && gmail.includes("@")) {
+    localStorage.setItem('ZORVETHRA_unlocked', 'true');
+    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
+    showMessage("✅ Gmail verified! App unlocked for " + UNLOCK_MINUTES + " minutes");
+  } else {
+    showMessage("❌ Invalid Gmail ID.", "#dc3545");
+  }
+}
+
+// Master Access
+function masterAccess() {
+  let code = prompt("Enter Master Code:");
+  if(code === MASTER_CODE) {
+    localStorage.setItem('ZORVETHRA_unlocked', 'true');
+    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
+    showMessage("🛡️ Master Access Granted!", "#007bff");
+  } else {
+    showMessage("❌ Invalid Master Code.", "#dc3545");
+  }
+}
+</script>
+
+</body>
 </html>
