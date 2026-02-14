@@ -1,251 +1,153 @@
-o<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZORVETHRA Ultimate App</title>
-<style>
-body{font-family:Arial;background:#111;color:white;padding:20px;}
-.container{max-width:450px;margin:auto;background:#1a1a1a;padding:20px;border-radius:10px;}
-input{width:100%;padding:12px;margin-top:10px;border-radius:6px;border:none;}
-button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;font-size:18px;cursor:pointer;}
-.green{background:#28a745;color:white;}
-.blue{background:#007bff;color:white;}
-.red{background:#dc3545;color:white;}
-#appContent{display:none;text-align:center;}
-.alertBox{background:#ff9800;color:black;padding:10px;border-radius:6px;margin-bottom:15px;font-size:14px;text-align:center;}
-.warning{background:#ff9800;color:black;padding:10px;border-radius:6px;margin-top:10px;font-size:14px;}
-</style>
-</head>
-<body>
-
-<div class="container" id="loginBox">
-<h2>ZORVETHRA Ultimate</h2>
-
-<div class="alertBox">
-⚠️ ध्यान दें / Attention:<br>
-App ka content update hone ke liye <b>page refresh</b> karna jaruri hai.<br>
-Please refresh the page to see latest updates and unlock features.
-</div>
-
-<div class="warning">
-⚠️ Legal Notice: Ye app personal use ke liye free hai. Misuse strictly prohibited.
-</div>
-
-<input type="text" id="mobile" placeholder="Enter Mobile Number">
-<input type="text" id="password" placeholder="Enter Unlock Code / Master Code">
-<button class="green" onclick="unlockApp()">Unlock / Login</button>
-<button class="blue" onclick="masterAccess()">Master Access</button>
-</div>
-
-<div class="container" id="appContent">
-<h3>✅ App Unlocked</h3>
-<p>Welcome to ZORVETHRA Ultimate App</p>
-<p>Content and features are now accessible.</p>
-<button class="red" onclick="lockApp()">Lock Again</button>
-</div>
-
-<script>
-// ================= CONFIG =================
-const MASTER_CODE = "ZORVETHRA999"; // Tumhara master code
-const UNLOCK_MINUTES = 60; // Auto unlock duration
-// ==========================================
-
-// Generate random OTP-like code
-function generateCode(){
-    return Math.floor(100000 + Math.random()*900000).toString();
-}
-
-// Unlock App
-function unlockApp(){
-    let mobile = document.getElementById("mobile").value;
-    let pass = document.getElementById("password").value;
-    if(!mobile){ alert("Enter Mobile Number"); return; }
-    localStorage.setItem("currentMobile", mobile);
-
-    // Master Code Access
-    if(pass === MASTER_CODE){
-        unlockUI();
-        alert("Master Access Granted");
-        return;
-    }
-
-    // Existing user code
-    let savedCode = localStorage.getItem("code_"+mobile);
-
-    if(!savedCode){
-        let newCode = generateCode();
-        localStorage.setItem("code_"+mobile, newCode);
-        alert("Your Unlock Code: " + newCode + "\nUse it to unlock.");
-        return;
-    }
-
-    if(pass === savedCode){
-        let time = Date.now() + UNLOCK_MINUTES*60*1000;
-        localStorage.setItem("unlock_"+mobile, time);
-        unlockUI();
-        alert("Unlocked for " + UNLOCK_MINUTES + " minutes");
-    }else{
-        alert("Wrong Code. Your current code: " + savedCode);
-    }
-}
-
-// Master Access button
-function masterAccess(){
-    let pass = document.getElementById("password").value;
-    if(pass === MASTER_CODE){
-        unlockUI();
-        alert("Master Access Granted");
-    }else{
-        alert("Wrong Master Code");
-    }
-}
-
-// Unlock UI function
-function unlockUI(){
-    document.getElementById("loginBox").style.display="none";
-    document.getElementById("appContent").style.display="block";
-}
-
-// Lock app
-function lockApp(){
-    let mobile = localStorage.getItem("currentMobile");
-    if(mobile){
-        localStorage.removeItem("unlock_"+mobile);
-    }
-    location.reload();
-}
-
-// Auto unlock check on page load
-window.onload = function(){
-    let mobile = localStorage.getItem("currentMobile");
-    if(!mobile) return;
-    document.getElementById("mobile").value = mobile;
-    let unlockTime = localStorage.getItem("unlock_"+mobile);
-    if(unlockTime && Date.now() < unlockTime){
-        unlockUI();
-    }
-}
-</script>
-
-</body>
-</html><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>ZORVETHRA Ultimate</title>
+
 <style>
-  body { font-family: Arial, sans-serif; background:#f0f4f8; }
-  #ZORVETHRABox {
-      max-width:400px; margin:50px auto; padding:20px;
-      border:2px solid #28a745; border-radius:10px; background:#f8fff8;
-      text-align:center;
-  }
-  h2 { color:#28a745; }
-  #refreshMsg { background:#fff3cd;color:#856404;padding:10px;margin:10px 0;border-radius:6px; }
-  #legalMsg { background:#f0f0f0;color:#555;padding:10px;margin:10px 0;border-radius:6px;font-size:14px; }
-  button {
-      padding:10px 18px;margin:5px;border:none;border-radius:6px;font-size:14px;cursor:pointer;
-      color:white;
-  }
-  #otpBtn { background:#28a745; }
-  #gmailBtn { background:#4285F4; }
-  #masterBtn { background:#007bff; padding:12px 20px;font-size:16px; }
-  #unlockMsg { display:none; padding:10px;margin-top:10px;border-radius:6px;text-align:center;font-weight:bold; }
+body{
+font-family: Arial, sans-serif;
+margin:0;
+background:#111;
+color:white;
+text-align:center;
+}
+
+#lockScreen{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+z-index:9999;
+}
+
+button{
+padding:12px 25px;
+margin:10px;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+}
+
+.payBtn{
+background:#28a745;
+color:white;
+}
+
+.masterBtn{
+background:#ffc107;
+}
+
+.appContent{
+display:none;
+padding:20px;
+}
+
+.notice{
+color:#ffcc00;
+margin-bottom:20px;
+}
 </style>
 </head>
+
 <body>
 
-let oldBox = document.getElementById("ZORVETHRABox");
-if(oldBox) oldBox.remove();
+<!-- LOCK SCREEN -->
+<div id="lockScreen">
 
-  <h2>ZORVETHRA Ultimate</h2>
+<h1>ZORVETHRA Ultimate</h1>
 
-  <div id="refreshMsg">
-    ⚠️ ध्यान दें / Attention: Page refresh required for latest updates. Please refresh to see new features and unlock content.
-  </div>
+<p class="notice">
+⚠️ ध्यान दें / Attention:<br>
+Latest update देखने के लिए page refresh करना जरूरी है.
+</p>
 
-  <div id="legalMsg">
-    ⚖️ Legal Notice: Ye app personal use ke liye free hai. Misuse strictly prohibited.
-  </div>
+<p class="notice">
+⚖️ Legal Notice:<br>
+यह App केवल Personal Use के लिए है।  
+Unauthorized sharing या resale strictly prohibited.
+</p>
 
-  <div style="margin:15px 0;">
-    <button id="otpBtn" onclick="loginWithOTP()">Login with OTP</button>
-    <button id="gmailBtn" onclick="loginWithGmail()">Login with Gmail</button>
-  </div>
+<button class="payBtn" onclick="paymentUnlock()">💰 Payment करके Unlock</button>
 
-  <button id="masterBtn" onclick="masterAccess()">Master Access</button>
+<button class="masterBtn" onclick="masterUnlock()">🔑 Master Access</button>
 
-  <div id="unlockMsg"></div>
+</div>
+
+<!-- APP CONTENT -->
+<div class="appContent" id="app">
+
+<h2>Welcome To ZORVETHRA</h2>
+<p>App Successfully Unlocked ✅</p>
 
 </div>
 
 <script>
-const UNLOCK_MINUTES = 60; // 1 hour unlock
-const MASTER_CODE = "MASTER2026"; // Change anytime
 
-// Check unlock status on page load
-window.onload = function() {
-  let oldBox = document.getElementById("ZORVETHRABox");
-  if(oldBox) oldBox.remove(); // Remove old box (if exists)
+const MASTER_KEY = "ZOR_MASTER_999";
 
-  // Insert fresh box (re-paste HTML above this script if needed)
+function paymentUnlock(){
 
-  // Check localStorage for unlock
-  let unlocked = localStorage.getItem('ZORVETHRA_unlocked');
-  let expiry = localStorage.getItem('ZORVETHRA_expiry');
+alert("Demo Payment Success ✅\nApp 1 घंटे के लिए Unlock हो गया");
 
-  if(unlocked === 'true' && expiry && new Date().getTime() < Number(expiry)) {
-      showMessage("✅ You are already unlocked!", "#28a745");
-  }
+let unlockTime = new Date().getTime() + (60 * 60 * 1000);
+
+localStorage.setItem("zorUnlock", unlockTime);
+
+checkAccess();
+
 }
 
-// Show inline messages
-function showMessage(msgText, color="#28a745") {
-  let msg = document.getElementById("unlockMsg");
-  msg.style.display = "block";
-  msg.style.background = color;
-  msg.innerHTML = msgText;
-  setTimeout(function(){ msg.style.display = "none"; }, 5000);
+function masterUnlock(){
+
+let key = prompt("Enter Master Key");
+
+if(key === MASTER_KEY){
+localStorage.setItem("zorUnlock","master");
+checkAccess();
+}else{
+alert("Wrong Master Key ❌");
 }
 
-// OTP Login
-function loginWithOTP() {
-  let userOTP = prompt("Enter OTP sent to your mobile/email:");
-  const VALID_OTP = "123456"; // Change this OTP anytime
-  if(userOTP === VALID_OTP) {
-    localStorage.setItem('ZORVETHRA_unlocked', 'true');
-    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
-    showMessage("✅ OTP verified! App unlocked for " + UNLOCK_MINUTES + " minutes");
-  } else {
-    showMessage("❌ Invalid OTP. Try again.", "#dc3545");
-  }
 }
 
-// Gmail Login
-function loginWithGmail() {
-  let gmail = prompt("Enter your Gmail ID:");
-  if(gmail && gmail.includes("@")) {
-    localStorage.setItem('ZORVETHRA_unlocked', 'true');
-    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
-    showMessage("✅ Gmail verified! App unlocked for " + UNLOCK_MINUTES + " minutes");
-  } else {
-    showMessage("❌ Invalid Gmail ID.", "#dc3545");
-  }
+function checkAccess(){
+
+let unlock = localStorage.getItem("zorUnlock");
+
+if(!unlock) return;
+
+if(unlock === "master"){
+openApp();
+return;
 }
 
-// Master Access
-function masterAccess() {
-  let code = prompt("Enter Master Code:");
-  if(code === MASTER_CODE) {
-    localStorage.setItem('ZORVETHRA_unlocked', 'true');
-    localStorage.setItem('ZORVETHRA_expiry', new Date().getTime() + UNLOCK_MINUTES*60*1000);
-    showMessage("🛡️ Master Access Granted!", "#007bff");
-  } else {
-    showMessage("❌ Invalid Master Code.", "#dc3545");
-  }
+let now = new Date().getTime();
+
+if(now < unlock){
+openApp();
+}else{
+localStorage.removeItem("zorUnlock");
 }
+
+}
+
+function openApp(){
+document.getElementById("lockScreen").style.display="none";
+document.getElementById("app").style.display="block";
+}
+
+checkAccess();
+
 </script>
 
 </body>
-</html>let oldBox = document.getElementById("ZORVETHRABox");
-if(oldBox) oldBox.remove();
+</html>
