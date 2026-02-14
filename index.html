@@ -2,273 +2,128 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zorvethra Master Pro</title>
-
+<title>ZORVETHRA Ultimate App</title>
 <style>
-body{
-background:#0f172a;
-color:white;
-font-family:sans-serif;
-padding:20px;
-}
-
-input, textarea, select{
-width:100%;
-padding:10px;
-margin-top:8px;
-background:#1e293b;
-color:white;
-border:none;
-border-radius:8px;
-}
-
-button{
-margin-top:10px;
-padding:12px;
-width:100%;
-border:none;
-background:#14b8a6;
-color:white;
-font-size:16px;
-border-radius:8px;
-}
-
-.card{
-background:#020617;
-padding:15px;
-margin-top:15px;
-border-radius:10px;
-}
-</style>
-</head>
-
-<body>
-
-<h2>Zorvethra Master PRO</h2>
-
-<!-- LOGIN -->
-<div class="card">
-<h3>User Login</h3>
-<input id="username" placeholder="Username">
-<input id="password" placeholder="Password">
-<button onclick="login()">Login</button>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="card">
-<h3>Admin Settings</h3>
-
-<input id="bankName" placeholder="Bank Name">
-<input id="upiId" placeholder="UPI / Payment ID">
-
-<select id="plan">
-<option value="1">1 Hour</option>
-<option value="24">1 Day</option>
-<option value="720">1 Month</option>
-<option value="2160">3 Month</option>
-<option value="8760">1 Year</option>
-</select>
-
-<button onclick="savePayment()">Save Payment Details</button>
-</div>
-
-<!-- PAYMENT SCREENSHOT -->
-<div class="card">
-<h3>Upload Payment Screenshot</h3>
-<input type="file">
-</div>
-
-<!-- DATA INPUT -->
-<div class="card">
-<h3>Upload Market Screenshot</h3>
-<input type="file">
-
-<textarea id="dataInput" placeholder="Paste Market Data"></textarea>
-
-<button onclick="analyze()">Analyze</button>
-</div>
-
-<!-- RESULT -->
-<div class="card" id="result"></div>
-
-<button onclick="copyResult()">Copy Result</button>
-<button onclick="downloadResult()">Download</button>
-<button onclick="shareResult()">Share</button>
-
-<script>
-
-// ===== LOGIN SYSTEM =====
-
-function login(){
-let u=document.getElementById("username").value;
-let p=document.getElementById("password").value;
-
-if(u==="admin" && p==="1234"){
-alert("Admin Login Success");
-}else{
-alert("User Login Success");
-}
-}
-
-// ===== PAYMENT SAVE =====
-
-function savePayment(){
-
-let bank=document.getElementById("bankName").value;
-let upi=document.getElementById("upiId").value;
-
-localStorage.setItem("bank",bank);
-localStorage.setItem("upi",upi);
-
-alert("Payment Saved");
-}
-
-// ===== ANALYSIS =====
-
-function analyze(){
-
-let singles=["2","0","5"];
-let pattis=["240","402","022","220","202"];
-
-document.getElementById("result").innerHTML=
-"<h3>Result</h3>"+
-"<b>Single:</b> "+singles.join(", ")+"<br><br>"+
-"<b>Patti:</b>
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ZORVETHRA Free App</title>
-<style>
-body{
-    font-family:Arial;
-    background:#111;
-    color:white;
-    padding:20px;
-}
-.container{
-    max-width:400px;
-    margin:auto;
-    background:#1a1a1a;
-    padding:20px;
-    border-radius:10px;
-}
-input{
-    width:100%;
-    padding:12px;
-    margin-top:10px;
-    border-radius:6px;
-    border:none;
-}
-button{
-    width:100%;
-    padding:15px;
-    margin-top:15px;
-    border:none;
-    border-radius:8px;
-    font-size:18px;
-    cursor:pointer;
-}
-.green{ background:#28a745; color:white; }
-.blue{ background:#007bff; color:white; }
-.red{ background:#dc3545; color:white; }
-
-#appContent{ display:none; margin-top:20px; text-align:center; }
+body{font-family:Arial;background:#111;color:white;padding:20px;}
+.container{max-width:450px;margin:auto;background:#1a1a1a;padding:20px;border-radius:10px;}
+input{width:100%;padding:12px;margin-top:10px;border-radius:6px;border:none;}
+button{width:100%;padding:15px;margin-top:15px;border:none;border-radius:8px;font-size:18px;cursor:pointer;}
+.green{background:#28a745;color:white;}
+.blue{background:#007bff;color:white;}
+.red{background:#dc3545;color:white;}
+#appContent{display:none;text-align:center;}
+.alertBox{background:#ff9800;color:black;padding:10px;border-radius:6px;margin-bottom:15px;font-size:14px;text-align:center;}
+.warning{background:#ff9800;color:black;padding:10px;border-radius:6px;margin-top:10px;font-size:14px;}
 </style>
 </head>
 <body>
 
-<div class="container">
-<h2>ZORVETHRA Free App</h2>
+<div class="container" id="loginBox">
+<h2>ZORVETHRA Ultimate</h2>
+
+<div class="alertBox">
+⚠️ ध्यान दें / Attention:<br>
+App ka content update hone ke liye <b>page refresh</b> karna jaruri hai.<br>
+Please refresh the page to see latest updates and unlock features.
+</div>
+
+<div class="warning">
+⚠️ Legal Notice: Ye app personal use ke liye free hai. Misuse strictly prohibited.
+</div>
 
 <input type="text" id="mobile" placeholder="Enter Mobile Number">
-<input type="text" id="password" placeholder="Enter Payment Code / OTP">
-
+<input type="text" id="password" placeholder="Enter Unlock Code / Master Code">
 <button class="green" onclick="unlockApp()">Unlock / Login</button>
 <button class="blue" onclick="masterAccess()">Master Access</button>
-
-<div id="appContent">
-<h3>✅ App Unlocked</h3>
-<p>Welcome to ZORVETHRA</p>
-<button class="red" onclick="lockApp()">Lock Again</button>
 </div>
+
+<div class="container" id="appContent">
+<h3>✅ App Unlocked</h3>
+<p>Welcome to ZORVETHRA Ultimate App</p>
+<p>Content and features are now accessible.</p>
+<button class="red" onclick="lockApp()">Lock Again</button>
 </div>
 
 <script>
-// ====================== CONFIG ======================
-const MASTER_CODE = "ZORVETHRA999"; // तुम्हारा private master code
-const AUTO_UNLOCK_MINUTES = 60; // default 1 hour unlock
-// =====================================================
+// ================= CONFIG =================
+const MASTER_CODE = "ZORVETHRA999"; // Tumhara master code
+const UNLOCK_MINUTES = 60; // Auto unlock duration
+// ==========================================
 
-// Random OTP / Payment Code Generate
+// Generate random OTP-like code
 function generateCode(){
-    return Math.floor(100000 + Math.random()*900000); // 6 digit random
+    return Math.floor(100000 + Math.random()*900000).toString();
 }
 
-// Unlock App Function
+// Unlock App
 function unlockApp(){
-    let pass = document.getElementById("password").value;
     let mobile = document.getElementById("mobile").value;
-
+    let pass = document.getElementById("password").value;
     if(!mobile){ alert("Enter Mobile Number"); return; }
+    localStorage.setItem("currentMobile", mobile);
 
-    // Master code check
+    // Master Code Access
     if(pass === MASTER_CODE){
-        document.getElementById("appContent").style.display="block";
+        unlockUI();
         alert("Master Access Granted");
         return;
     }
 
-    // Auto random code for user
-    let storedCode = localStorage.getItem("userCode_" + mobile);
+    // Existing user code
+    let savedCode = localStorage.getItem("code_"+mobile);
 
-    if(!storedCode){
-        let code = generateCode();
-        localStorage.setItem("userCode_" + mobile, code);
-        storedCode = code;
-        alert("Your Unlock Code: " + code);
+    if(!savedCode){
+        let newCode = generateCode();
+        localStorage.setItem("code_"+mobile, newCode);
+        alert("Your Unlock Code: " + newCode + "\nUse it to unlock.");
+        return;
     }
 
-    if(pass === storedCode){
-        let unlockTime = Date.now() + AUTO_UNLOCK_MINUTES*60*1000;
-        localStorage.setItem("unlockTime_" + mobile, unlockTime);
-        document.getElementById("appContent").style.display="block";
-        alert("App unlocked for " + AUTO_UNLOCK_MINUTES + " minutes");
+    if(pass === savedCode){
+        let time = Date.now() + UNLOCK_MINUTES*60*1000;
+        localStorage.setItem("unlock_"+mobile, time);
+        unlockUI();
+        alert("Unlocked for " + UNLOCK_MINUTES + " minutes");
     }else{
-        alert("Invalid Code. Your code is: " + storedCode);
+        alert("Wrong Code. Your current code: " + savedCode);
     }
 }
 
-// Master Access Button
+// Master Access button
 function masterAccess(){
     let pass = document.getElementById("password").value;
     if(pass === MASTER_CODE){
-        document.getElementById("appContent").style.display="block";
+        unlockUI();
         alert("Master Access Granted");
     }else{
         alert("Wrong Master Code");
     }
 }
 
-// Auto Unlock Check
-window.onload = function(){
-    let mobile = document.getElementById("mobile").value;
-    if(!mobile) return;
+// Unlock UI function
+function unlockUI(){
+    document.getElementById("loginBox").style.display="none";
+    document.getElementById("appContent").style.display="block";
+}
 
-    let unlockTime = localStorage.getItem("unlockTime_" + mobile);
-    if(unlockTime && Date.now() < unlockTime){
-        document.getElementById("appContent").style.display="block";
-    }
-};
-
-// Lock App
+// Lock app
 function lockApp(){
-    let mobile = document.getElementById("mobile").value;
+    let mobile = localStorage.getItem("currentMobile");
     if(mobile){
-        localStorage.removeItem("unlockTime_" + mobile);
+        localStorage.removeItem("unlock_"+mobile);
     }
-    document.getElementById("appContent").style.display="none";
-    alert("App Locked");
+    location.reload();
+}
+
+// Auto unlock check on page load
+window.onload = function(){
+    let mobile = localStorage.getItem("currentMobile");
+    if(!mobile) return;
+    document.getElementById("mobile").value = mobile;
+    let unlockTime = localStorage.getItem("unlock_"+mobile);
+    if(unlockTime && Date.now() < unlockTime){
+        unlockUI();
+    }
 }
 </script>
 
