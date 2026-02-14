@@ -151,3 +151,89 @@ checkAccess();
 
 </body>
 </html>
+<!-- ===== ZORVETHRA Market Analyzer ===== -->
+
+<div id="zorAnalyzer" style="margin-top:20px; text-align:center;">
+
+<h2>📊 Market Analyzer</h2>
+
+<textarea id="zorInput" 
+placeholder="Market data / Patti / Numbers paste kare..."
+style="width:90%; height:120px; padding:10px;"></textarea>
+
+<br><br>
+
+<button onclick="zorAnalyze()" 
+style="background:green; color:white; padding:10px 20px; border:none; cursor:pointer;">
+Analyze Market
+</button>
+
+<h3 id="zorResult" style="margin-top:20px;"></h3>
+
+</div>
+
+<script>
+
+function zorAnalyze(){
+
+let data = document.getElementById("zorInput").value;
+
+if(data.trim()==""){
+alert("Data paste karo pehle");
+return;
+}
+
+/* ===== DIGIT COUNT ===== */
+
+let digitCount = {};
+
+for(let i=0;i<data.length;i++){
+
+let d = data[i];
+
+if(!isNaN(d) && d!=" "){
+digitCount[d] = (digitCount[d]||0)+1;
+}
+
+}
+
+/* ===== STRONG NUMBER FIND ===== */
+
+let strong = Object.keys(digitCount).reduce((a,b)=>
+digitCount[a] > digitCount[b] ? a : b
+);
+
+/* ===== MEDIUM NUMBER ===== */
+
+let sorted = Object.entries(digitCount)
+.sort((a,b)=>b[1]-a[1]);
+
+let medium = sorted[1] ? sorted[1][0] : strong;
+
+/* ===== SHADOW NUMBER ===== */
+
+let shadow = (parseInt(strong)+5)%10;
+
+/* ===== SIMPLE PATTI GENERATOR ===== */
+
+let patti1 = strong + medium + shadow;
+let patti2 = medium + shadow + strong;
+
+/* ===== RANDOM SUPPORT ===== */
+
+let support = Math.floor(Math.random()*10);
+
+/* ===== OUTPUT ===== */
+
+document.getElementById("zorResult").innerHTML = `
+✅ Strong Number : <b>${strong}</b><br>
+⭐ Medium Number : <b>${medium}</b><br>
+🌑 Shadow Number : <b>${shadow}</b><br>
+🔮 Support Number : <b>${support}</b><br><br>
+
+🔥 Possible Patti : <b>${patti1}</b> , <b>${patti2}</b>
+`;
+
+}
+
+</script>
